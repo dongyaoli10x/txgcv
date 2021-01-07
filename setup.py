@@ -22,19 +22,19 @@ with open('requirements.txt') as f:
 
 
 # https://github.com/pypa/setuptools_scm
-use_scm = {"write_to": "napari_txgcv/_version.py"}
+use_scm = {"write_to": "txgcv/_version.py"}
 
 setup(
-    name='napari-txgcv',
+    name='txgcv',
     author='10x Genomics',
     author_email='dongyao.li@10xgenomics.com',
     license='BSD-3',
-    url='https://github.com/dongyaoli10x/napari-txgcv',
+    url='https://github.com/dongyaoli10x/txgcv',
     description='plugin for 10x internal use',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=requirements,
     use_scm_version=use_scm,
     setup_requires=['setuptools_scm'],
@@ -44,7 +44,6 @@ setup(
         'Topic :: Software Development :: Testing',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
@@ -54,7 +53,8 @@ setup(
     ],
     entry_points={
         'napari.plugin': [
-            'txgcv = napari_txgcv',
+            'ImageRegistration = txgcv.plugins.img_regist_plugin',
+            'ColorDeconv = txgcv.plugins.color_deconv_svd_plugin'
         ],
     },
 )
