@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# napari-txgcv documentation build configuration file, created by
+# txgcv documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct  1 00:43:18 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -48,8 +48,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'napari-txgcv'
-copyright = u'2015, Dongyao Li'
+project = u'txgcv'
+copyright = u'2020, 10x Genomics'
 author = u'Dongyao Li'
 
 # The version info for the project you're documenting, acts as replacement for
