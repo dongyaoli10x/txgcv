@@ -11,6 +11,8 @@ class ParameterEditBox(QWidget):
         self._parameter = para
         self._name = name
         self.value_input = QLineEdit(self)
+        if self._parameter.info is not None:
+            self.value_input.setToolTip(self._parameter.info)
         self._set_text()
         self.value_input.editingFinished.connect(self._update_value)
 

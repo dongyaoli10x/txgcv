@@ -1,4 +1,4 @@
-# napari-txgcv
+# txgcv
 
 [![PyPI](https://img.shields.io/pypi/v/napari-txgcv.svg?color=green)](https://pypi.org/project/txgcv)
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-txgcv.svg?color=green)](https://python.org)

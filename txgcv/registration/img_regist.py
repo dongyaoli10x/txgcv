@@ -9,18 +9,65 @@ from txgcv.base import Algorithm, Parameter
 class ImageRegister(Algorithm):
 
     _param_dict = {
-        "sampling_rate": Parameter(value=0.01, val_type=float, val_range=[0, 1]),
-        "num_hist_bin": Parameter(value=60, val_type=int, val_range=[0, 256],),
-        "learning_rate": Parameter(value=1.0, val_type=float, val_range=[0, np.inf]),
-        "min_step": Parameter(value=0.01, val_type=float, val_range=[0, np.inf]),
-        "num_iter": Parameter(value=100, val_type=int, val_range=[1, np.inf]),
-        "grad_tol": Parameter(value=1e-8, val_type=float, val_range=[0, np.inf]), 
-        "relax_factor": Parameter(value=0.5, val_type=float, val_range=[0, 1]),
-        "shrink_factor": Parameter(value=[4, 2, 1], val_type="LIST_OF_INT", val_range=[0, np.inf]),
-        "smooth_sigma": Parameter(value=[2, 1, 0], val_type="LIST_OF_INT", val_range=[0, np.inf]),
+        "sampling_rate": Parameter(
+            value=0.01,
+            val_type=float,
+            val_range=[0, 1],
+            info="pixel sampling rate when calculating metric",
+        ),
+        "num_hist_bin": Parameter(
+            value=60,
+            val_type=int,
+            val_range=[0, 256],
+            info="number of histogram bin used in mutual information computation",
+        ),
+        "learning_rate": Parameter(
+            value=1.0,
+            val_type=float,
+            val_range=[0, np.inf],
+            info="learning rate of gradient descent",
+        ),
+        "min_step": Parameter(
+            value=0.01,
+            val_type=float,
+            val_range=[0, np.inf],
+            info="minimum step of step gradient descent",
+        ),
+        "num_iter": Parameter(
+            value=100,
+            val_type=int,
+            val_range=[1, np.inf],
+            info="maximum iteration of gradient descent",
+        ),
+        "grad_tol": Parameter(
+            value=1e-8,
+            val_type=float,
+            val_range=[0, np.inf],
+            info="gradient tolerance to determine convergence",
+        ),
+        "relax_factor": Parameter(
+            value=0.5,
+            val_type=float,
+            val_range=[0, 1],
+            info="relaxation factor of learning rate of gradient descent",
+        ),
+        "shrink_factor": Parameter(
+            value=[4, 2, 1],
+            val_type="LIST_OF_INT",
+            val_range=[0, np.inf],
+            info="shrink factor for multi resolution iteration",
+        ),
+        "smooth_sigma": Parameter(
+            value=[2, 1, 0],
+            val_type="LIST_OF_INT",
+            val_range=[0, np.inf],
+            info="sigma of smoothing Gaussian kernal used at each resolution",
+        ),
     }
 
-    def __init__(self, moving_img: np.ndarray = None, fixed_img: np.ndarray = None) -> None:
+    def __init__(
+        self, moving_img: np.ndarray = None, fixed_img: np.ndarray = None
+    ) -> None:
         super().__init__()
         self.set_moving_img(moving_img)
         self.set_fixed_img(fixed_img)
@@ -37,7 +84,9 @@ class ImageRegister(Algorithm):
         else:
             self._fixed_img = sitk.GetImageFromArray(img[1, :, :])
 
-    def keypoint_initialize(self, moving_kp: List[Tuple[float, float]], fixed_kp: List[Tuple[float, float]]) -> np.ndarray:
+    def keypoint_initialize(
+        self, moving_kp: List[Tuple[float, float]], fixed_kp: List[Tuple[float, float]]
+    ) -> np.ndarray:
 
         fix_data = fixed_kp.flatten()
         n = len(fix_data)
@@ -94,7 +143,9 @@ class ImageRegister(Algorithm):
             numberOfHistogramBins=self._param_dict["num_hist_bin"].value
         )
         registration_method.SetMetricSamplingStrategy(registration_method.RANDOM)
-        registration_method.SetMetricSamplingPercentage(self._param_dict["sampling_rate"].value)
+        registration_method.SetMetricSamplingPercentage(
+            self._param_dict["sampling_rate"].value
+        )
         registration_method.SetInterpolator(sitk.sitkLinear)
 
         registration_method.SetOptimizerAsRegularStepGradientDescent(
@@ -107,8 +158,12 @@ class ImageRegister(Algorithm):
         registration_method.SetOptimizerScalesFromPhysicalShift()
 
         registration_method.SetInitialTransform(self._init_transform, inPlace=False)
-        registration_method.SetShrinkFactorsPerLevel(shrinkFactors=self._param_dict["shrink_factor"].value)
-        registration_method.SetSmoothingSigmasPerLevel(smoothingSigmas=self._param_dict["smooth_sigma"].value)
+        registration_method.SetShrinkFactorsPerLevel(
+            shrinkFactors=self._param_dict["shrink_factor"].value
+        )
+        registration_method.SetSmoothingSigmasPerLevel(
+            smoothingSigmas=self._param_dict["smooth_sigma"].value
+        )
         registration_method.SmoothingSigmasAreSpecifiedInPhysicalUnitsOn()
 
         def start():
